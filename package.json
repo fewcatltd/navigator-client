@@ -1,20 +1,23 @@
 {
   "name": "electron",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.8",
+  "description": "Airdrop Navigator",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "dist-and-push": "electron-builder -p always"
   },
-  "author": "",
+  "author": "Dmitriy Kotov",
   "license": "ISC",
   "devDependencies": {
+    "electron": "^27.1.2",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
     "electron-updater": "^6.1.7",
-    "electron-builder": "^24.9.1",
-    "electron": "^27.1.2"
-
+    "update-electron-app": "^3.0.0"
   },
   "build": {
     "appId": "airdrop.navigator.id",
@@ -23,7 +26,8 @@
       "output": "build"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "resources/icon.ico"
     },
     "mac": {
       "target": "dmg"
@@ -35,7 +39,7 @@
       {
         "provider": "github",
         "owner": "fewcatltd",
-        "repo": "https://github.com/fewcatltd/navigator-client"
+        "repo": "navigator-client"
       }
     ]
   }

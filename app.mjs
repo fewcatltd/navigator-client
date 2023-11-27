@@ -3,12 +3,16 @@ import { useAuth } from './auth.mjs'
 import { useStarknet } from './starknet.mjs'
 import * as utils from './utils.mjs'
 import { useZora } from './zora.mjs'
+const { ipcRenderer } = require('electron');
 
 const { createApp, ref } = window.Vue
 
-const SOCKET_SERVER_URL = 'http://localhost:3000/?version=' + window.VERSION
+const SOCKET_SERVER_URL = 'https://fewcats.com/?version=' + window.VERSION
 
 const isConnected = ref(false)
+const isUpdateAvailable = ref(false);
+const isUpdateDownloaded = ref(false);
+
 const socket = io(SOCKET_SERVER_URL)
 socket.on('connect', () => isConnected.value = true)
 socket.on('disconnect', () => {
@@ -25,6 +29,19 @@ socket.on('error', () => {
     socket.connect();
   }, 1000)
 })
+
+ipcRenderer.on('update_available', () => {
+  isUpdateAvailable.value = true;
+});
+
+ipcRenderer.on('update_downloaded', () => {
+  isUpdateDownloaded.value = true;
+});
+
+ipcRenderer.on('version', (event, version) => {
+  window.VERSION = version;
+  document.querySelector('.Version').innerHTML = 'Version: ' + version;
+});
 
 const WorkspaceUI = {
   async setup () {
@@ -65,18 +82,48 @@ const app = createApp({
       isAuthorized: auth.isAuthorized,
     }
   },
+  data() {
+    return {
+      isUpdateAvailable,
+      isUpdateDownloaded
+    };
+  },
+  methods: {
+    restartApp() {
+      ipcRenderer.send('restart_app');
+    }
+  },
   template: `
-    <div v-if="!isAuthorized" class="AuthView">
-      <component :is="AuthUI"/>
+    <div>
+      <div v-if="isUpdateAvailable" class="update-notification">
+      <el-alert 
+        title="Доступно новое обновление!" 
+        type="info"
+        description="Обновление будет установлено после перезагрузки."
+        :closable="false"
+        show-icon>
+      </el-alert>
+      <el-button 
+        @click="restartApp"
+        type="primary"
+        :disabled="!isUpdateDownloaded"
+        style="margin-top: 10px;">
+        Перезагрузить
+      </el-button>
     </div>
 
-    <div v-else-if="!isConnected" class="ConnectingView">
-      <h2 class="PageTitle">Подключение к серверу...</h2>
+      <div v-if="!isAuthorized" class="AuthView">
+        <component :is="AuthUI"/>
+      </div>
+
+      <div v-else-if="!isConnected" class="ConnectingView">
+        <h2 class="PageTitle">Подключение к серверу...</h2>
+      </div>
+      
+      <suspense v-else>
+        <component :is="WorkspaceUI"/>
+      </suspense>
     </div>
-    
-    <suspense v-else>
-      <component :is="WorkspaceUI"/>
-    </suspense>
   `,
 })
 app.use(window.ElementPlus)
