@@ -1,6 +1,6 @@
 {
-  "name": "electron",
-  "version": "1.0.8",
+  "name": "airdrop-navigator",
+  "version": "1.0.9",
   "description": "Airdrop Navigator",
   "main": "main.js",
   "scripts": {
