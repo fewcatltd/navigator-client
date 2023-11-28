@@ -1,6 +1,6 @@
 {
   "name": "airdrop-navigator",
-  "version": "1.0.9",
+  "version": "1.0.0",
   "description": "Airdrop Navigator",
   "main": "main.js",
   "scripts": {
@@ -30,7 +30,12 @@
       "icon": "resources/icon.ico"
     },
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "category": "public.app-category.utilities",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "./macos/entitlements.mac.plist",
+      "entitlementsInherit": "./macos/entitlements.mac.inherit.plist"
     },
     "linux": {
       "target": "AppImage"
