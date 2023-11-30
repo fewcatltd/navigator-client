@@ -22,6 +22,7 @@
    ```bash
    npm install
    ```
+   На маке может быть проблема. Ее регение тут node_modules/appdmg/lib/appdmg.js
 3. Соберите приложение:
     - Для Windows:
       ```bash

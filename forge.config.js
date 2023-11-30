@@ -27,11 +27,15 @@ module.exports = {
       },
     },
     {
+      name: '@electron-forge/maker-zip',
+    },
+    {
       name: '@electron-forge/maker-dmg',
       config: {
-        format: 'ULFO'
+        name: 'Airdrop Navigator',
+        format: 'ULFO',
       }
-    }
+    },
   ],
   plugins: [
     {
