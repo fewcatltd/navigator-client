@@ -5,11 +5,16 @@ const {updateElectronApp} = require('update-electron-app')
 
 let mainWindow;
 
+if (require('electron-squirrel-startup')) {
+    app.quit()
+}
+
 function createWindow() {
+    if (require('electron-squirrel-startup')) return
 
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1200,
+        height: 800,
         icon: path.join(__dirname, 'resources/icon.png'),
         webPreferences: {
             nodeIntegration: true,
