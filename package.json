@@ -1,6 +1,6 @@
 {
   "name": "airdrop-navigator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Airdrop Navigator",
   "repository": {
     "type": "git",
@@ -9,9 +9,6 @@
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "dist-and-push": "electron-builder -p always",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish"
@@ -31,37 +28,6 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
-    "electron-updater": "^6.1.7",
     "update-electron-app": "^3.0.0"
-  },
-  "build": {
-    "appId": "airdrop.navigator.id",
-    "productName": "Airdrop Navigator",
-    "directories": {
-      "output": "build"
-    },
-    "win": {
-      "target": "nsis",
-      "icon": "resources/icon.ico"
-    },
-    "mac": {
-      "target": "dmg",
-      "category": "public.app-category.utilities",
-      "hardenedRuntime": true,
-      "gatekeeperAssess": false,
-      "entitlements": "./macos/entitlements.mac.plist",
-      "entitlementsInherit": "./macos/entitlements.mac.inherit.plist",
-      "notarize": {}
-    },
-    "linux": {
-      "target": "AppImage"
-    },
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "fewcatltd",
-        "repo": "navigator-client"
-      }
-    ]
   }
 }

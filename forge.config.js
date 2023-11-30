@@ -23,7 +23,7 @@ module.exports = {
     {
       name: '@electron-forge/maker-squirrel',
       config: {
-        name: "Airdrop Navigator"
+        name: "airdrop-navigator"
       },
     },
     {

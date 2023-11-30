@@ -1,17 +1,12 @@
-const {app, BrowserWindow, ipcMain} = require('electron');
-const {autoUpdater} = require('electron-updater');
+const {app, BrowserWindow} = require('electron');
 const path = require("path");
 const packageJson = require('./package.json');
+const {updateElectronApp} = require('update-electron-app')
+updateElectronApp()
 
 let mainWindow;
 
 function createWindow() {
-    autoUpdater.checkForUpdatesAndNotify(
-        {
-            title: "A new update is ready to install",
-            body: `Version {version} has been downloaded and will be automatically installed on exit`,
-        }
-    )
 
     mainWindow = new BrowserWindow({
         width: 800,
@@ -56,18 +51,4 @@ app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     }
-});
-
-// Auto-updater events
-autoUpdater.on('update-available', () => {
-    mainWindow.webContents.send('update_available');
-});
-
-autoUpdater.on('update-downloaded', () => {
-    mainWindow.webContents.send('update_downloaded');
-});
-
-// Listen for update install request from the renderer process
-ipcMain.on('restart_app', () => {
-    autoUpdater.quitAndInstall();
 });
