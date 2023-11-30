@@ -1,6 +1,6 @@
 {
   "name": "airdrop-navigator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Airdrop Navigator",
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "electron": "^27.1.2"
   },
   "dependencies": {
+    "electron-log": "^5.0.1",
     "electron-squirrel-startup": "^1.0.0",
     "update-electron-app": "^3.0.0"
   }
