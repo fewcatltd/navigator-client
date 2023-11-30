@@ -1,21 +1,36 @@
 {
   "name": "airdrop-navigator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Airdrop Navigator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fewcatltd/navigator-client.git"
+  },
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron-forge start",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "dist-and-push": "electron-builder -p always"
+    "dist-and-push": "electron-builder -p always",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish"
   },
   "author": "Dmitriy Kotov",
-  "license": "ISC",
+  "license": "Apache License 2.0",
   "devDependencies": {
-    "electron": "^27.1.2",
-    "electron-builder": "^24.9.1"
+    "@electron-forge/cli": "^7.1.0",
+    "@electron-forge/maker-deb": "^7.1.0",
+    "@electron-forge/maker-rpm": "^7.1.0",
+    "@electron-forge/maker-squirrel": "^7.1.0",
+    "@electron-forge/maker-zip": "^7.1.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.1.0",
+    "@electron-forge/publisher-github": "^7.1.0",
+    "@electron/notarize": "^2.2.0",
+    "electron": "^27.1.2"
   },
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^6.1.7",
     "update-electron-app": "^3.0.0"
   },
@@ -35,7 +50,8 @@
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "entitlements": "./macos/entitlements.mac.plist",
-      "entitlementsInherit": "./macos/entitlements.mac.inherit.plist"
+      "entitlementsInherit": "./macos/entitlements.mac.inherit.plist",
+      "notarize": {}
     },
     "linux": {
       "target": "AppImage"
