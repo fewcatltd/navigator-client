@@ -35,6 +35,15 @@ module.exports = {
                 name: 'Airdrop Navigator',
                 format: 'ULFO',
             }
+        },
+        {
+            name: '@electron-forge/maker-deb',
+            config: {
+                options: {
+                    maintainer: 'Dmitriy Kotov',
+                    homepage: 'https://github.com/fewcatltd/navigator-client'
+                }
+            }
         }
     ],
     plugins: [

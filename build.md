@@ -26,17 +26,17 @@
 3. Соберите приложение:
     - Для Windows:
       ```bash
-      npm run dist -- -w
+      npm run make
       ```
    - Для MacOS:
      ```bash
-       npm run dist -- -m
+       npm run make
      ```
     - Для Linux:
       ```bash
-         npm run dist -- -l
+         npm run make
       ```
-     Это создаст исполняемый файл приложения в папке `build/`
+     Это создаст исполняемый файл приложения в папке `out/`
 
 Проблемы и решения
 ------------------
