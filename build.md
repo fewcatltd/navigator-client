@@ -34,7 +34,7 @@
      ```
     - Для Linux:
       ```bash
-         npm run make
+         npm run make-linux
       ```
      Это создаст исполняемый файл приложения в папке `out/`
 
