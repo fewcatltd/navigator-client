@@ -3,6 +3,7 @@ import { useAuth } from './auth.mjs'
 import { useStarknet } from './starknet.mjs'
 import * as utils from './utils.mjs'
 import { useZora } from './zora.mjs'
+import { useZkSync } from './zkSync.mjs'
 const { ipcRenderer } = require('electron');
 
 const { createApp, ref } = window.Vue
@@ -48,10 +49,12 @@ const WorkspaceUI = {
     const activeBlockchainTab = utils.useLocalStorageRef('active-blockchain-tab', 'zora')
     const zora = await useZora(socket)
     const starknet = await useStarknet(socket)
+    const zkSync = await useZkSync(socket)
 
     return {
       ZoraUI: zora.UI,
       StarknetUI: starknet.UI,
+      ZkSyncUI: zkSync.UI,
       activeBlockchainTab,
     }
   },
@@ -65,6 +68,9 @@ const WorkspaceUI = {
         </el-tab-pane>
         <el-tab-pane label="Starknet" name="starknet">
           <component :is="StarknetUI"/>
+        </el-tab-pane>
+        <el-tab-pane label="zkSync" name="zkSync">
+          <component :is="ZkSyncUI"/>
         </el-tab-pane>
       </el-tabs>
     </div>

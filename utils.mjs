@@ -12,7 +12,7 @@ export const useLocalStorageRef = (name, defaultValue) => {
   return value
 }
 
-const version = 3
+const version = 4
 
 export const useReactiveEncryptedStorage = async (name, defaultValue, {
   encode = async (data) => encryptData(JSON.stringify(data), storagePassword.value),
