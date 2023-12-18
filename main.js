@@ -2,15 +2,19 @@ const {app, BrowserWindow} = require('electron');
 const path = require("path");
 const packageJson = require('./package.json');
 const {updateElectronApp} = require('update-electron-app')
-updateElectronApp()
 
 let mainWindow;
 
+if (require('electron-squirrel-startup')) {
+    app.quit()
+}
+
 function createWindow() {
+    if (require('electron-squirrel-startup')) return
 
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1200,
+        height: 800,
         icon: path.join(__dirname, 'resources/icon.png'),
         webPreferences: {
             nodeIntegration: true,
@@ -28,13 +32,16 @@ function createWindow() {
     });
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+    updateElectronApp()
+    return createWindow()
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

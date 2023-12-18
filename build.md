@@ -22,20 +22,21 @@
    ```bash
    npm install
    ```
+   На маке может быть проблема. Ее регение тут node_modules/appdmg/lib/appdmg.js
 3. Соберите приложение:
     - Для Windows:
       ```bash
-      npm run dist -- -w
+      npm run make
       ```
    - Для MacOS:
      ```bash
-       npm run dist -- -m
+       npm run make
      ```
     - Для Linux:
       ```bash
-         npm run dist -- -l
+         npm run make-linux
       ```
-     Это создаст исполняемый файл приложения в папке `build/`
+     Это создаст исполняемый файл приложения в папке `out/`
 
 Проблемы и решения
 ------------------

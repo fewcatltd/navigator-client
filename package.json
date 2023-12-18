@@ -12,23 +12,39 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "publish": "electron-forge publish"
+    "publish": "electron-forge publish",
+    "make-linux": "electron-builder"
   },
   "author": "Dmitriy Kotov",
   "license": "Apache License 2.0",
   "devDependencies": {
     "@electron-forge/cli": "^7.1.0",
     "@electron-forge/maker-deb": "^7.1.0",
+    "@electron-forge/maker-dmg": "^7.1.0",
     "@electron-forge/maker-rpm": "^7.1.0",
     "@electron-forge/maker-squirrel": "^7.1.0",
+    "@electron-forge/maker-wix": "^7.1.0",
     "@electron-forge/maker-zip": "^7.1.0",
     "@electron-forge/plugin-auto-unpack-natives": "^7.1.0",
     "@electron-forge/publisher-github": "^7.1.0",
     "@electron/notarize": "^2.2.0",
-    "electron": "^27.1.2"
+    "electron": "^27.1.2",
+    "electron-builder": "^24.9.1"
   },
   "dependencies": {
+    "electron-log": "^5.0.1",
     "electron-squirrel-startup": "^1.0.0",
     "update-electron-app": "^3.0.0"
+  },
+  "build": {
+    "appId": "com.fewcatltd.airdrop-navigator",
+    "linux": {
+      "target": "AppImage",
+      "icon": "resources/icon.png",
+      "category": "Utility"
+    },
+    "directories": {
+      "output": "out/"
+    }
   }
 }
