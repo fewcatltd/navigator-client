@@ -1,13 +1,14 @@
 import io from 'https://cdn.jsdelivr.net/npm/socket.io-client@4.0.1/+esm'
 import { useAuth } from './auth.mjs'
-import { useStarknet } from './starknet.mjs'
 import * as utils from './utils.mjs'
 import { useZora } from './zora.mjs'
+import {useZkSync} from "./zksync.mjs";
 const { ipcRenderer } = require('electron');
+const packageJson = require('./package.json');
 
 const { createApp, ref } = window.Vue
 
-const SOCKET_SERVER_URL = 'https://fewcats.com/?version=' + window.VERSION
+const SOCKET_SERVER_URL = 'https://fewcats.com/?version=' + packageJson.version
 
 const isConnected = ref(false)
 const isUpdateAvailable = ref(false);
@@ -16,14 +17,12 @@ const isUpdateDownloaded = ref(false);
 const socket = io(SOCKET_SERVER_URL)
 socket.on('connect', () => isConnected.value = true)
 socket.on('disconnect', () => {
-  console.log('disconnect')
   isConnected.value = false;
   setTimeout(() => {
     socket.connect();
   }, 1000)
 })
 socket.on('error', () => {
-  console.log('error')
   isConnected.value = false;
   setTimeout(() => {
     socket.connect();
@@ -47,11 +46,11 @@ const WorkspaceUI = {
   async setup () {
     const activeBlockchainTab = utils.useLocalStorageRef('active-blockchain-tab', 'zora')
     const zora = await useZora(socket)
-    const starknet = await useStarknet(socket)
+    const zkSync = await useZkSync(socket)
 
     return {
       ZoraUI: zora.UI,
-      StarknetUI: starknet.UI,
+      ZkSyncUi: zkSync.UI,
       activeBlockchainTab,
     }
   },
@@ -63,8 +62,8 @@ const WorkspaceUI = {
         <el-tab-pane label="Zora" name="zora">
           <component :is="ZoraUI"/>
         </el-tab-pane>
-        <el-tab-pane label="Starknet" name="starknet">
-          <component :is="StarknetUI"/>
+        <el-tab-pane label="Zk-Sync" name="zkSync">
+          <component :is="ZkSyncUi"/>
         </el-tab-pane>
       </el-tabs>
     </div>
