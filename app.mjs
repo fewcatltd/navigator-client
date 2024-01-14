@@ -3,6 +3,7 @@ import { useAuth } from './auth.mjs'
 import * as utils from './utils.mjs'
 import { useZora } from './zora.mjs'
 import {useZkSync} from "./zksync.mjs";
+import {useScroll} from "./scroll.mjs";
 const { ipcRenderer } = require('electron');
 const packageJson = require('./package.json');
 
@@ -47,10 +48,12 @@ const WorkspaceUI = {
     const activeBlockchainTab = utils.useLocalStorageRef('active-blockchain-tab', 'zora')
     const zora = await useZora(socket)
     const zkSync = await useZkSync(socket)
+    const scroll = await useScroll(socket)
 
     return {
       ZoraUI: zora.UI,
-      ZkSyncUi: zkSync.UI,
+      ZkSyncUI: zkSync.UI,
+      ScrollUI: scroll.UI,
       activeBlockchainTab,
     }
   },
@@ -63,7 +66,10 @@ const WorkspaceUI = {
           <component :is="ZoraUI"/>
         </el-tab-pane>
         <el-tab-pane label="Zk-Sync" name="zkSync">
-          <component :is="ZkSyncUi"/>
+          <component :is="ZkSyncUI"/>
+        </el-tab-pane>
+        <el-tab-pane label="Scroll" name="Scroll">
+          <component :is="ScrollUI"/>
         </el-tab-pane>
       </el-tabs>
     </div>
