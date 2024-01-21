@@ -10,6 +10,7 @@ const packageJson = require('./package.json');
 const { createApp, ref } = window.Vue
 
 const SOCKET_SERVER_URL = 'https://fewcats.com/?version=' + packageJson.version
+// const SOCKET_SERVER_URL = 'http://localhost:3000/?version=' + packageJson.version
 
 const isConnected = ref(false)
 const isUpdateAvailable = ref(false);
