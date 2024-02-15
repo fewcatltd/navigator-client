@@ -12,6 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Use a secret
+        run: echo "Secret value is ${{ secrets.GH_TOKEN }}"
+
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
