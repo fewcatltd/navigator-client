@@ -1,4 +1,3 @@
-import { Web3 } from 'https://cdn.jsdelivr.net/npm/web3@4.1.1/+esm'
 import { copy, decryptData, downloadFile, encryptData, readFile } from './utils.mjs'
 import * as utils from './utils.mjs'
 

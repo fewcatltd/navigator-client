@@ -4,12 +4,14 @@ import * as utils from './utils.mjs'
 import { useZora } from './zora.mjs'
 import {useZkSync} from "./zksync.mjs";
 import {useScroll} from "./scroll.mjs";
+import {useLinea} from "./linea.mjs";
 const { ipcRenderer } = require('electron');
 const packageJson = require('./package.json');
 
 const { createApp, ref } = window.Vue
 
 const SOCKET_SERVER_URL = 'https://fewcats.com/?version=' + packageJson.version
+// const SOCKET_SERVER_URL = 'http://localhost:3000/?version=' + packageJson.version
 
 const isConnected = ref(false)
 const isUpdateAvailable = ref(false);
@@ -49,11 +51,13 @@ const WorkspaceUI = {
     const zora = await useZora(socket)
     const zkSync = await useZkSync(socket)
     const scroll = await useScroll(socket)
+    const linea = await useLinea(socket)
 
     return {
       ZoraUI: zora.UI,
       ZkSyncUI: zkSync.UI,
       ScrollUI: scroll.UI,
+      LineaUI: linea.UI,
       activeBlockchainTab,
     }
   },
@@ -70,6 +74,9 @@ const WorkspaceUI = {
         </el-tab-pane>
         <el-tab-pane label="Scroll" name="Scroll">
           <component :is="ScrollUI"/>
+        </el-tab-pane>
+        <el-tab-pane label="Linea" name="Linea">
+          <component :is="LineaUI"/>
         </el-tab-pane>
       </el-tabs>
     </div>
