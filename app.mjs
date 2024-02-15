@@ -20,13 +20,11 @@ const isUpdateDownloaded = ref(false);
 const socket = io(SOCKET_SERVER_URL)
 socket.on('connect', () => isConnected.value = true)
 socket.on('disconnect', () => {
-  isConnected.value = false;
   setTimeout(() => {
     socket.connect();
   }, 1000)
 })
 socket.on('error', () => {
-  isConnected.value = false;
   setTimeout(() => {
     socket.connect();
   }, 1000)
