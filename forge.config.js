@@ -41,7 +41,7 @@ module.exports = {
             config: {
                 options: {
                     maintainer: 'Dmitriy Kotov',
-                    homepage: 'https://github.com/fewcatltd/navigator-client'
+                    homepage: 'https://github.com/drunckoder/navigator-client'
                 }
             }
         }
@@ -83,7 +83,7 @@ module.exports = {
                 draft: true,
                 force: true,
                 repository: {
-                    owner: 'fewcatltd',
+                    owner: 'drunckoder',
                     name: 'navigator-client'
                 },
                 prerelease: true
