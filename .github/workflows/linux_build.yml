@@ -12,6 +12,9 @@ jobs:
       packages: write
       issues: write
 
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - uses: actions/checkout@v2
 
