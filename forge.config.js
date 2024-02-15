@@ -27,9 +27,6 @@ module.exports = {
             },
         },
         {
-            name: '@electron-forge/maker-zip',
-        },
-        {
             name: '@electron-forge/maker-dmg',
             config: {
                 name: 'Airdrop Navigator',
@@ -41,7 +38,7 @@ module.exports = {
             config: {
                 options: {
                     maintainer: 'Dmitriy Kotov',
-                    homepage: 'https://github.com/drunckoder/navigator-client'
+                    homepage: 'https://github.com/fewcatltd/navigator-client'
                 }
             }
         }
@@ -83,7 +80,7 @@ module.exports = {
                 draft: true,
                 force: true,
                 repository: {
-                    owner: 'drunckoder',
+                    owner: 'fewcatltd',
                     name: 'navigator-client'
                 },
                 prerelease: true
