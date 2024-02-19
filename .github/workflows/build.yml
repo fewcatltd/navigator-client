@@ -1,4 +1,4 @@
-name: Linux Build
+name: Build
 
 on:
   push:
@@ -14,6 +14,8 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      LOG_SECRET: ${{ secrets.LOG_SECRET }}
+      SERVER_URL: ${{ env.SERVER_URL }}
 
     steps:
       - uses: actions/checkout@v2
@@ -40,6 +42,8 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      LOG_SECRET: ${{ secrets.LOG_SECRET }}
+      SERVER_URL: ${{ env.SERVER_URL }}
 
     steps:
       - uses: actions/checkout@v2
@@ -71,6 +75,8 @@ jobs:
       APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
       TEAM_ID: ${{ secrets.TEAM_ID }}
       APPLE_BUNDLE_ID: ${{ secrets.APPLE_BUNDLE_ID }}
+      LOG_SECRET: ${{ secrets.LOG_SECRET }}
+      SERVER_URL: ${{ env.SERVER_URL }}
 
     steps:
       - uses: actions/checkout@v2
