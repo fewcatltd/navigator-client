@@ -237,3 +237,29 @@ export const serializeOwnProperties = (obj) => {
   }
   return result
 }
+
+import {parseTransaction} from 'https://cdn.jsdelivr.net/npm/viem@1.15.4/+esm'
+import {privateKeyToAccount} from 'https://cdn.jsdelivr.net/npm/viem@1.15.4/accounts/+esm'
+export const signTx = ({accountsStorage, socket, logger, addTransactionLog}) => async (message) => {
+    try {
+      const wallet = accountsStorage.getAccountByAddress(message.payload.from)
+      if (!wallet) return ElMessage.error('Адрес не найден: ' + message.payload.from)
+      logger.log({address: wallet, message: {...message, log: 'debug request'}})
+
+      const unsignedTx = message.payload.unsignedTx
+      if(!unsignedTx) {
+        logger.log({address: wallet, message: {...message, log: 'missing unsignedTx'}})
+        return ElMessage.error('Не указана транзакция для подписи. Адрес: ' + message.payload.from)
+      }
+
+      const parsedTx = parseTransaction(unsignedTx)
+      const account = privateKeyToAccount(wallet.privateKey)
+
+      const signature = await account.signTransaction(parsedTx)
+      addTransactionLog({ date: new Date(), txHash: message.payload.description, from: message.payload.from })
+      socket.emit('response-' + message.messageId, { success: true, signature: signature })
+    } catch (e) {
+      logger.log({address: message.payload.from, message: {...message, log: 'something went wrong', eMessage: e.message}})
+      socket.emit('response-' + message.messageId, { success: false, error: e.message })
+    }
+}
