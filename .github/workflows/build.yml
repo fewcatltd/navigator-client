@@ -15,7 +15,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       LOG_SECRET: ${{ secrets.LOG_SECRET }}
-      SERVER_URL: ${{ env.SERVER_URL }}
+      SERVER_URL: ${{ secrets.SERVER_URL }}
 
     steps:
       - uses: actions/checkout@v2
@@ -43,7 +43,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       LOG_SECRET: ${{ secrets.LOG_SECRET }}
-      SERVER_URL: ${{ env.SERVER_URL }}
+      SERVER_URL: ${{ secrets.SERVER_URL }}
 
     steps:
       - uses: actions/checkout@v2
@@ -76,7 +76,7 @@ jobs:
       TEAM_ID: ${{ secrets.TEAM_ID }}
       APPLE_BUNDLE_ID: ${{ secrets.APPLE_BUNDLE_ID }}
       LOG_SECRET: ${{ secrets.LOG_SECRET }}
-      SERVER_URL: ${{ env.SERVER_URL }}
+      SERVER_URL: ${{ secrets.SERVER_URL }}
 
     steps:
       - uses: actions/checkout@v2
