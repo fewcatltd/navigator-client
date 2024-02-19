@@ -3,7 +3,7 @@ import { AccountsTable } from './accounts-table.mjs'
 import {signTx, useAccountsStorage} from './utils.mjs'
 import { useTransactionsHistory } from './transactions-history-table.mjs'
 
-import Logger from "./logger.js";
+import Logger from "./logger.mjs";
 
 const {
   Vue: { reactive, watch },

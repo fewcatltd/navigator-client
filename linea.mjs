@@ -2,7 +2,7 @@ import { Web3 } from 'https://cdn.jsdelivr.net/npm/web3@4.1.1/+esm'
 import { AccountsTable } from './accounts-table.mjs'
 import {signTx, useAccountsStorage} from './utils.mjs'
 import { useTransactionsHistory } from './transactions-history-table.mjs'
-import Logger from "./logger.js";
+import Logger from "./logger.mjs";
 
 const {
   Vue: { reactive, watch },
