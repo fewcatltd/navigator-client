@@ -25,8 +25,8 @@ export const useZkSync = async (socket) => {
   const { addTransactionLog, UI: TransactionsTable } = useTransactionsHistory()
 
   const signTransaction = signTx({accountsStorage, logger, addTransactionLog})
-  socket.on('zksync.signTransaction', async (message) => {
-    await signTransaction(message)
+  socket.on('zksync.signTransaction', async (message, callback) => {
+    await signTransaction({message, callback})
   })
 
   const UI = {

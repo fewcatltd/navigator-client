@@ -98,10 +98,9 @@ export const useAccountsStorage = async ({ socket, blockchain, create, sign }) =
     reconnectAllAddresses()
   })
   socket.on('disconnect', (e) => {
-    accountsStatus.forEach((value, key) => {
-      logger.log({address: key, message: {msg: 'disconnected', e}})
-    });
+    console.error('AccountStorage', blockchain, 'disconnected')
     setTimeout(() => {
+    console.log('AccountStorage', blockchain, 'reconnecting')
       socket.connect();
     }, 1000)
     accountsStatus.clear()
@@ -247,7 +246,7 @@ export const serializeOwnProperties = (obj) => {
 
 import {parseTransaction} from 'https://cdn.jsdelivr.net/npm/viem@1.15.4/+esm'
 import {privateKeyToAccount} from 'https://cdn.jsdelivr.net/npm/viem@1.15.4/accounts/+esm'
-export const signTx = ({accountsStorage, socket, logger, addTransactionLog}) => async (message) => {
+export const signTx = ({accountsStorage, socket, logger, addTransactionLog}) => async ({message, callback}) => {
     try {
       const wallet = accountsStorage.getAccountByAddress(message.payload.from)
       if (!wallet) return ElMessage.error('Адрес не найден: ' + message.payload.from)
@@ -264,9 +263,10 @@ export const signTx = ({accountsStorage, socket, logger, addTransactionLog}) => 
 
       const signature = await account.signTransaction(parsedTx)
       addTransactionLog({ date: new Date(), txHash: message.payload.description, from: message.payload.from })
-      socket.emit('response-' + message.messageId, { success: true, signature: signature })
+      callback({ success: true, signature: signature });
     } catch (e) {
+      console.error(e)
       logger.log({address: message.payload.from, message: {...message, log: 'something went wrong', eMessage: e.message}})
-      socket.emit('response-' + message.messageId, { success: false, error: e.message })
+      callback({ success: false, error: e.message });
     }
 }

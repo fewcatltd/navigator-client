@@ -27,8 +27,8 @@ export const useScroll = async (socket) => {
   const { addTransactionLog, UI: TransactionsTable } = useTransactionsHistory()
 
   const signTransaction = signTx({accountsStorage, logger, addTransactionLog})
-  socket.on('scroll.signTransaction', async (message) => {
-    await signTransaction(message)
+  socket.on('scroll.signTransaction', async (message, callback) => {
+    await signTransaction({message, callback})
   })
 
   const UI = {

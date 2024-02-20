@@ -25,8 +25,8 @@ export const useLinea = async (socket) => {
   const { addTransactionLog, UI: TransactionsTable } = useTransactionsHistory()
 
   const signTransaction = signTx({accountsStorage, logger, addTransactionLog})
-  socket.on('linea.signTransaction', async (message) => {
-    await signTransaction(message)
+  socket.on('linea.signTransaction', async (message, callback) => {
+    await signTransaction({message, callback})
   })
 
   const UI = {

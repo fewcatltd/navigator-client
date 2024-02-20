@@ -70,8 +70,8 @@ export const useZora = async (socket) => {
   })
 
   const signTransaction = signTx({accountsStorage, logger, addTransactionLog})
-  socket.on('zora.signTransaction', async (message) => {
-    await signTransaction(message)
+  socket.on('zora.signTransaction', async (message, callback) => {
+    await signTransaction({message, callback})
   })
 
   const UI = {
