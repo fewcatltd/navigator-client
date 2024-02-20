@@ -1,3 +1,5 @@
+import Logger from "./logger.mjs";
+
 const {
   Vue: { reactive, watch, ref },
   ElementPlus: { ElMessage },
@@ -45,6 +47,7 @@ export const useReactiveEncryptedStorage = async (name, defaultValue, {
 }
 
 export const useAccountsStorage = async ({ socket, blockchain, create, sign }) => {
+  const logger = new Logger({socket, blockchain})
   const accounts = await useReactiveEncryptedStorage(blockchain + '-accounts', [], {
     encode: async (data) => encryptData(JSON.stringify(data.map(account => account.privateKey)), storagePassword.value),
     decode: async (data) => JSON.parse(await decryptData(data, storagePassword.value)).map(pk => create(pk)),
@@ -92,16 +95,20 @@ export const useAccountsStorage = async ({ socket, blockchain, create, sign }) =
     ElMessage.error('Ошибка подключения: ' + error.message)
   })
   socket.on('connect', () => {
-    console.log('connect 2')
     reconnectAllAddresses()
   })
-  socket.on('disconnect', () => {
-    console.log('disconnect 2')
+  socket.on('disconnect', (e) => {
+    accountsStatus.forEach((value, key) => {
+      logger.log({address: key, message: {msg: 'disconnected', e}})
+    });
+    setTimeout(() => {
+      socket.connect();
+    }, 1000)
     accountsStatus.clear()
   })
 
   socket.on('addressAuthChallenge', (message) => {
-    console.log('addressAuthChallenge', message)
+    logger.log({address: message.payload.address, message: {action: 'addressAuthChallenge', data: message}})
     if (message.payload.blockchain.toLowerCase() !== blockchain.toLowerCase()) return
     const account = getAccountByAddress(message.payload.address)
     if (account) {
