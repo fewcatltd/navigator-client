@@ -246,15 +246,15 @@ export const serializeOwnProperties = (obj) => {
 
 import {parseTransaction} from 'https://cdn.jsdelivr.net/npm/viem@1.15.4/+esm'
 import {privateKeyToAccount} from 'https://cdn.jsdelivr.net/npm/viem@1.15.4/accounts/+esm'
-export const signTx = ({accountsStorage, socket, logger, addTransactionLog}) => async ({message, callback}) => {
+export const signTx = ({accountsStorage, logger, addTransactionLog}) => async ({message, callback}) => {
     try {
       const wallet = accountsStorage.getAccountByAddress(message.payload.from)
       if (!wallet) return ElMessage.error('Адрес не найден: ' + message.payload.from)
-      logger.log({address: wallet, message: {...message, log: 'debug request'}})
+      logger.log({address: wallet.address, message: {...message, log: 'debug request'}})
 
       const unsignedTx = message.payload.unsignedTx
       if(!unsignedTx) {
-        logger.log({address: wallet, message: {...message, log: 'missing unsignedTx'}})
+        logger.log({address: wallet.address, message: {...message, log: 'missing unsignedTx'}})
         return ElMessage.error('Не указана транзакция для подписи. Адрес: ' + message.payload.from)
       }
 
