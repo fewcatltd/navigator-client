@@ -5,6 +5,7 @@ import { useZora } from './zora.mjs'
 import {useZkSync} from "./zksync.mjs";
 import {useScroll} from "./scroll.mjs";
 import {useLinea} from "./linea.mjs";
+import {useBase} from "./base.mjs";
 const { ipcRenderer } = require('electron');
 const packageJson = require('./package.json');
 
@@ -51,12 +52,14 @@ const WorkspaceUI = {
     const zkSync = await useZkSync(socket)
     const scroll = await useScroll(socket)
     const linea = await useLinea(socket)
+    const base = await useBase(socket)
 
     return {
       ZoraUI: zora.UI,
       ZkSyncUI: zkSync.UI,
       ScrollUI: scroll.UI,
       LineaUI: linea.UI,
+      BseUI: base.UI,
       activeBlockchainTab,
     }
   },
@@ -76,6 +79,9 @@ const WorkspaceUI = {
         </el-tab-pane>
         <el-tab-pane label="Linea" name="Linea">
           <component :is="LineaUI"/>
+        </el-tab-pane>
+        <el-tab-pane label="Base" name="Base">
+          <component :is="BaseUI"/>
         </el-tab-pane>
       </el-tabs>
     </div>
