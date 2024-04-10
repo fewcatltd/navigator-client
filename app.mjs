@@ -59,7 +59,7 @@ const WorkspaceUI = {
       ZkSyncUI: zkSync.UI,
       ScrollUI: scroll.UI,
       LineaUI: linea.UI,
-      BseUI: base.UI,
+      BaseUI: base.UI,
       activeBlockchainTab,
     }
   },
