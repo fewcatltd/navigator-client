@@ -1,4 +1,6 @@
 import Logger from "./logger.mjs";
+import {parseTransaction} from 'https://cdn.jsdelivr.net/npm/viem@1.15.4/+esm'
+import {privateKeyToAccount} from 'https://cdn.jsdelivr.net/npm/viem@1.15.4/accounts/+esm'
 
 const {
   Vue: { reactive, watch, ref },
@@ -66,26 +68,48 @@ export const useAccountsStorage = async ({ socket, blockchain, create, sign }) =
     accounts.splice(accounts.indexOf(account), 1)
   }
 
+  const submitSignature = ({address}) => async ({salt}) => {
+    const account = privateKeyToAccount(getAccountByAddress(address).privateKey)
+
+    const signature = await account.signMessage({
+      account,
+      message: salt,
+    })
+
+    socket.emit('v2_submitSignature', {address, signature, salt, blockchain, version}, (response) => {
+        if (response.success) {
+            accountsStatus.set(address.toLowerCase(), 'ONLINE')
+        } else {
+            accountsStatus.set(address.toLowerCase(), 'UNAUTHORIZED')
+        }
+    })
+  }
   const reconnectAddress = async (address) => {
     const account = getAccountByAddress(address)
     if (!account) return ElMessage.error('Адрес не найден12: ' + address)
 
     accountsStatus.set(address, 'AUTHORIZING')
-    socket.emit('addAddress', { blockchain, address, version })
+    const f = submitSignature({address})
+    socket.emit('v2_addAddress', { address }, async (response) => {await f(response)} )
   }
   const reconnectAllAddresses = async () => {
     for (const account of accounts) {
       accountsStatus.set(account.address, 'AUTHORIZING')
-      socket.emit('addAddress', { blockchain, address: account.address, version })
+      const f = submitSignature({address: account.address})
+      socket.emit('v2_addAddress', { address: account.address }, async (response) => {
+          await f(response)
+        })
     }
   }
 
   watch(accounts, () => {
-    console.log('accounts', accounts)
     for (const account of accounts) {
       if (!accountsStatus.has(account.address.toLowerCase())) {
         accountsStatus.set(account.address.toLowerCase(), 'AUTHORIZING')
-        socket.emit('addAddress', { blockchain, address: account.address, version })
+        const f = submitSignature({address: account.address})
+        socket.emit('v2_addAddress', { address: account.address }, async (response) => {
+          await f(response)
+        })
       }
     }
   }, { immediate: true })
@@ -244,8 +268,6 @@ export const serializeOwnProperties = (obj) => {
   return result
 }
 
-import {parseTransaction} from 'https://cdn.jsdelivr.net/npm/viem@1.15.4/+esm'
-import {privateKeyToAccount} from 'https://cdn.jsdelivr.net/npm/viem@1.15.4/accounts/+esm'
 export const signTx = ({accountsStorage, logger, addTransactionLog}) => async ({message, callback}) => {
     try {
       const wallet = accountsStorage.getAccountByAddress(message.payload.from)
