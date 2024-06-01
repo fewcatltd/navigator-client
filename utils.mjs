@@ -123,10 +123,6 @@ export const useAccountsStorage = async ({ socket, blockchain, create, sign }) =
   })
   socket.on('disconnect', (e) => {
     console.error('AccountStorage', blockchain, 'disconnected')
-    setTimeout(() => {
-    console.log('AccountStorage', blockchain, 'reconnecting')
-      socket.connect();
-    }, 1000)
     accountsStatus.clear()
   })
 

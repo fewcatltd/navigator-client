@@ -19,17 +19,18 @@ const isUpdateAvailable = ref(false);
 const isUpdateDownloaded = ref(false);
 
 const socket = io(SOCKET_SERVER_URL)
-socket.on('connect', () => isConnected.value = true)
+socket.on('connect', () => {
+  isConnected.value = true
+})
 socket.on('disconnect', () => {
   isConnected.value = false
-  setTimeout(() => {
-    socket.connect();
-  }, 1000)
 })
 socket.on('error', () => {
+  console.log('Error from server', 'SocketID:', socket.id)
+  socket.disconnect();
   setTimeout(() => {
     socket.connect();
-  }, 1000)
+  }, 5000);
 })
 
 ipcRenderer.on('update_available', () => {
@@ -44,9 +45,10 @@ ipcRenderer.on('version', (event, version) => {
   window.VERSION = version;
   document.querySelector('.Version').innerHTML = 'Version: ' + version;
 });
-
+let workspaceInstance = null;
 const WorkspaceUI = {
   async setup () {
+    if(workspaceInstance) return workspaceInstance;
     const activeBlockchainTab = utils.useLocalStorageRef('active-blockchain-tab', 'zora')
     const zora = await useZora(socket)
     const zkSync = await useZkSync(socket)
@@ -54,7 +56,7 @@ const WorkspaceUI = {
     const linea = await useLinea(socket)
     const base = await useBase(socket)
 
-    return {
+    workspaceInstance = {
       ZoraUI: zora.UI,
       ZkSyncUI: zkSync.UI,
       ScrollUI: scroll.UI,
@@ -62,6 +64,8 @@ const WorkspaceUI = {
       BaseUI: base.UI,
       activeBlockchainTab,
     }
+
+    return workspaceInstance;
   },
   template: `
     <div class="WorkspaceView" style="margin-top: 50px;">
