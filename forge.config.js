@@ -56,12 +56,31 @@ module.exports = {
             // Путь к каталогу с результатами сборки
             const outDir = forgeConfig.outputDirectory || 'out';
 
-            // Поиск .app файла внутри каталога out
-            const appPath = path.join(outDir, 'airdrop-navigator-darwin-x64', 'airdrop-navigator.app');
+            console.log(`Searching for .app file in directory: ${outDir}`);
+            const findAppFile = (dir) => {
+                const files = fs.readdirSync(dir);
+                for (const file of files) {
+                    const fullPath = path.join(dir, file);
+                    if (fs.lstatSync(fullPath).isDirectory()) {
+                        if (file.endsWith('.app')) {
+                            return fullPath;
+                        } else {
+                            const appFile = findAppFile(fullPath);
+                            if (appFile) return appFile;
+                        }
+                    }
+                }
+                return null;
+            };
 
-            // Проверка существует ли .app файл
-            if (!fs.existsSync(appPath)) {
-                throw new Error(`Cannot find .app file at ${appPath}`);
+            // Поиск .app файла внутри каталога out
+            const appPath = findAppFile(outDir);
+
+            if (appPath) {
+                console.log(`Found .app file at ${appPath}`);
+            } else {
+                console.error(`Cannot find .app file in ${outDir}`);
+                throw new Error(`Cannot find .app file in ${outDir}`);
             }
 
             return notarize({
