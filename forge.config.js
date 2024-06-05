@@ -79,6 +79,7 @@ module.exports = {
                 return null;
             };
 
+
             appPath = findAppFile(outDir);
 
             if (!appPath || !fs.existsSync(appPath)) {
