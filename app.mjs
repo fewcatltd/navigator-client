@@ -6,6 +6,7 @@ import {useZkSync} from "./zksync.mjs";
 import {useScroll} from "./scroll.mjs";
 import {useLinea} from "./linea.mjs";
 import {useBase} from "./base.mjs";
+import {useHyperlane} from "./hyperlane.mjs";
 const { ipcRenderer } = require('electron');
 const packageJson = require('./package.json');
 
@@ -55,13 +56,14 @@ const WorkspaceUI = {
     const scroll = await useScroll(socket)
     const linea = await useLinea(socket)
     const base = await useBase(socket)
-
+    const hyperlane = await useHyperlane(socket)
     workspaceInstance = {
       ZoraUI: zora.UI,
       ZkSyncUI: zkSync.UI,
       ScrollUI: scroll.UI,
       LineaUI: linea.UI,
       BaseUI: base.UI,
+      HyperlaneUI: hyperlane.UI,
       activeBlockchainTab,
     }
 
@@ -86,6 +88,9 @@ const WorkspaceUI = {
         </el-tab-pane>
         <el-tab-pane label="Base" name="Base">
           <component :is="BaseUI"/>
+        </el-tab-pane>
+        <el-tab-pane label="Hyperlane" name="Hyperlane">
+          <component :is="HyperlaneUI"/>
         </el-tab-pane>
       </el-tabs>
     </div>
