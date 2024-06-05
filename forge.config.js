@@ -51,7 +51,7 @@ module.exports = {
     ],
     hooks: {
         postMake: async (forgeConfig, makeResults) => {
-            if (process.platform !== 'darwin') return;
+             if (process.platform !== 'darwin') return;
 
             const outDir = forgeConfig.outputDirectory || 'out';
             const arch = process.arch === 'x64' ? 'intel' : 'arm';
@@ -97,17 +97,18 @@ module.exports = {
 
             for (const makeResult of makeResults) {
                 if (makeResult.platform === 'darwin') {
-                    for (const artifactPath of makeResult.artifacts) {
+                    for (let i = 0; i < makeResult.artifacts.length; i++) {
+                        const artifactPath = makeResult.artifacts[i];
                         if (artifactPath.endsWith('.dmg')) {
                             const parsedPath = path.parse(artifactPath);
                             const newArtifactPath = path.join(parsedPath.dir, `${parsedPath.name}-${arch}${parsedPath.ext}`);
                             fs.renameSync(artifactPath, newArtifactPath);
                             console.log(`Renamed DMG file to: ${newArtifactPath}`);
+                            makeResult.artifacts[i] = newArtifactPath;  // Update the path for publishing
                         }
                     }
                 }
             }
-
         }
     },
     publishers: [
