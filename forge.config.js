@@ -55,6 +55,7 @@ module.exports = {
 
             // Путь к каталогу с результатами сборки
             const outDir = forgeConfig.outputDirectory || 'out';
+            const arch = process.arch === 'x64' ? 'intel' : 'arm';
 
             console.log(`Searching for .app file in directory: ${outDir}`);
             const findAppFile = (dir) => {
@@ -78,18 +79,21 @@ module.exports = {
 
             if (appPath) {
                 console.log(`Found .app file at ${appPath}`);
+                const namePostfix = arch === 'intel' ? 'intel' : `M_chip`;
+                const newAppPath = path.join(outDir, `Airdrop Navigator-${namePostfix}.app`);
+                fs.renameSync(appPath, newAppPath);
+                console.log(`Renamed .app file to ${newAppPath}`);
+                await notarize({
+                    appBundleId: process.env.APPLE_BUNDLE_ID,
+                    appPath: newAppPath,
+                    appleId: process.env.APPLE_ID,
+                    appleIdPassword: process.env.APPLE_ID_PASSWORD,
+                    teamId: process.env.TEAM_ID
+                });
             } else {
                 console.error(`Cannot find .app file in ${outDir}`);
                 throw new Error(`Cannot find .app file in ${outDir}`);
             }
-
-            return notarize({
-                appBundleId: process.env.APPLE_BUNDLE_ID,
-                appPath: appPath,
-                appleId: process.env.APPLE_ID,
-                appleIdPassword: process.env.APPLE_ID_PASSWORD,
-                teamId: process.env.TEAM_ID
-            });
         }
     },
     publishers: [

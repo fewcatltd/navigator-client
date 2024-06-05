@@ -1,6 +1,6 @@
 {
   "name": "airdrop-navigator",
-  "version": "4.3.4",
+  "version": "4.3.5",
   "description": "Airdrop Navigator",
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.1.0",
     "@electron-forge/publisher-github": "^7.1.0",
     "@electron/notarize": "^2.2.0",
-    "electron": "^29.0.0-alpha.10",
+    "electron": "^29.4.2",
     "electron-builder": "^24.9.1"
   },
   "dependencies": {
