@@ -51,7 +51,7 @@ module.exports = {
     ],
     hooks: {
         postMake: async (forgeConfig, makeResults) => {
-             if (process.platform !== 'darwin') return;
+            if (process.platform !== 'darwin') return;
 
             const outDir = forgeConfig.outputDirectory || 'out';
             const arch = process.arch === 'x64' ? 'intel' : 'arm';
@@ -63,16 +63,23 @@ module.exports = {
             });
 
             let appPath;
-            for (const makeResult of makeResults) {
-                if (makeResult.platform === 'darwin') {
-                    for (const artifactPath of makeResult.artifacts) {
-                        if (artifactPath.endsWith('.app')) {
-                            appPath = artifactPath;
-                            break;
+            const findAppFile = (dir) => {
+                const files = fs.readdirSync(dir);
+                for (const file of files) {
+                    const fullPath = path.join(dir, file);
+                    if (fs.lstatSync(fullPath).isDirectory()) {
+                        if (file.endsWith('.app')) {
+                            return fullPath;
+                        } else {
+                            const appFile = findAppFile(fullPath);
+                            if (appFile) return appFile;
                         }
                     }
                 }
-            }
+                return null;
+            };
+
+            appPath = findAppFile(outDir);
 
             if (!appPath || !fs.existsSync(appPath)) {
                 throw new Error(`Cannot find .app file in ${outDir}`);
@@ -100,6 +107,7 @@ module.exports = {
                     }
                 }
             }
+
         }
     },
     publishers: [
