@@ -53,7 +53,32 @@ module.exports = {
         postMake: async (forgeConfig, makeResults) => {
             if (process.platform !== 'darwin') return;
 
+            const outDir = forgeConfig.outputDirectory || 'out';
             const arch = process.arch === 'x64' ? 'intel' : 'arm';
+            let appPath;
+
+            for (const makeResult of makeResults) {
+                if (makeResult.platform === 'darwin') {
+                    for (const artifactPath of makeResult.artifacts) {
+                        if (artifactPath.endsWith('.app')) {
+                            appPath = artifactPath;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!appPath || !fs.existsSync(appPath)) {
+                throw new Error(`Cannot find .app file in ${outDir}`);
+            }
+
+            await notarize({
+                appBundleId: process.env.APPLE_BUNDLE_ID,
+                appPath: appPath,
+                appleId: process.env.APPLE_ID,
+                appleIdPassword: process.env.APPLE_ID_PASSWORD,
+                teamId: process.env.TEAM_ID
+            });
 
             for (const makeResult of makeResults) {
                 if (makeResult.platform === 'darwin') {
@@ -66,16 +91,6 @@ module.exports = {
                     }
                 }
             }
-
-            const appPath = path.join(forgeConfig.outputDirectory || 'out', `Airdrop Navigator.app`);
-
-            await notarize({
-                appBundleId: process.env.APPLE_BUNDLE_ID,
-                appPath: appPath,
-                appleId: process.env.APPLE_ID,
-                appleIdPassword: process.env.APPLE_ID_PASSWORD,
-                teamId: process.env.TEAM_ID
-            });
         }
     },
     publishers: [
