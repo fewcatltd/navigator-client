@@ -51,12 +51,18 @@ module.exports = {
     ],
     hooks: {
         postMake: async (forgeConfig, makeResults) => {
-            if (process.platform !== 'darwin') return;
+             if (process.platform !== 'darwin') return;
 
             const outDir = forgeConfig.outputDirectory || 'out';
             const arch = process.arch === 'x64' ? 'intel' : 'arm';
-            let appPath;
 
+            console.log(`Listing files in output directory: ${outDir}`);
+            const files = fs.readdirSync(outDir);
+            files.forEach(file => {
+                console.log(`File: ${file}`);
+            });
+
+            let appPath;
             for (const makeResult of makeResults) {
                 if (makeResult.platform === 'darwin') {
                     for (const artifactPath of makeResult.artifacts) {
@@ -71,6 +77,8 @@ module.exports = {
             if (!appPath || !fs.existsSync(appPath)) {
                 throw new Error(`Cannot find .app file in ${outDir}`);
             }
+
+            console.log(`Found .app file at: ${appPath}`);
 
             await notarize({
                 appBundleId: process.env.APPLE_BUNDLE_ID,
@@ -87,6 +95,7 @@ module.exports = {
                             const parsedPath = path.parse(artifactPath);
                             const newArtifactPath = path.join(parsedPath.dir, `${parsedPath.name}-${arch}${parsedPath.ext}`);
                             fs.renameSync(artifactPath, newArtifactPath);
+                            console.log(`Renamed DMG file to: ${newArtifactPath}`);
                         }
                     }
                 }
