@@ -50,30 +50,26 @@ module.exports = {
         },
     ],
     hooks: {
-        postMake: async (forgeConfig, makeResult) => {
+        postMake: async (forgeConfig, makeResults) => {
             if (process.platform !== 'darwin') return;
 
-            const outDir = forgeConfig.outputDirectory || 'out';
             const arch = process.arch === 'x64' ? 'intel' : 'arm';
 
-            for (const result of makeResult) {
-                if (result.platform === 'darwin') {
-                    const newPath = result.artifacts.map((artifact) => {
-                        const parsedPath = path.parse(artifact);
-                        if (parsedPath.ext === '.dmg') {
-                            const newPath = path.join(parsedPath.dir, `${parsedPath.name}-${arch}${parsedPath.ext}`);
-                            fs.renameSync(artifact, newPath);
-                            return newPath;
+            for (const makeResult of makeResults) {
+                if (makeResult.platform === 'darwin') {
+                    for (const artifactPath of makeResult.artifacts) {
+                        if (artifactPath.endsWith('.dmg')) {
+                            const parsedPath = path.parse(artifactPath);
+                            const newArtifactPath = path.join(parsedPath.dir, `${parsedPath.name}-${arch}${parsedPath.ext}`);
+                            fs.renameSync(artifactPath, newArtifactPath);
                         }
-                        return artifact;
-                    });
-                    console.log(`Renamed DMG file(s) to: ${newPath}`);
+                    }
                 }
             }
 
-            const appPath = path.join(outDir, `Airdrop Navigator-${arch}.app`);
+            const appPath = path.join(forgeConfig.outputDirectory || 'out', `Airdrop Navigator.app`);
 
-            return notarize({
+            await notarize({
                 appBundleId: process.env.APPLE_BUNDLE_ID,
                 appPath: appPath,
                 appleId: process.env.APPLE_ID,
