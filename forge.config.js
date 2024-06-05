@@ -50,50 +50,36 @@ module.exports = {
         },
     ],
     hooks: {
-        postMake: async (forgeConfig, _) => {
+        postMake: async (forgeConfig, makeResult) => {
             if (process.platform !== 'darwin') return;
 
-            // Путь к каталогу с результатами сборки
             const outDir = forgeConfig.outputDirectory || 'out';
             const arch = process.arch === 'x64' ? 'intel' : 'arm';
 
-            console.log(`Searching for .app file in directory: ${outDir}`);
-            const findAppFile = (dir) => {
-                const files = fs.readdirSync(dir);
-                for (const file of files) {
-                    const fullPath = path.join(dir, file);
-                    if (fs.lstatSync(fullPath).isDirectory()) {
-                        if (file.endsWith('.app')) {
-                            return fullPath;
-                        } else {
-                            const appFile = findAppFile(fullPath);
-                            if (appFile) return appFile;
+            for (const result of makeResult) {
+                if (result.platform === 'darwin') {
+                    const newPath = result.artifacts.map((artifact) => {
+                        const parsedPath = path.parse(artifact);
+                        if (parsedPath.ext === '.dmg') {
+                            const newPath = path.join(parsedPath.dir, `${parsedPath.name}-${arch}${parsedPath.ext}`);
+                            fs.renameSync(artifact, newPath);
+                            return newPath;
                         }
-                    }
+                        return artifact;
+                    });
+                    console.log(`Renamed DMG file(s) to: ${newPath}`);
                 }
-                return null;
-            };
-
-            // Поиск .app файла внутри каталога out
-            const appPath = findAppFile(outDir);
-
-            if (appPath) {
-                console.log(`Found .app file at ${appPath}`);
-                const namePostfix = arch === 'intel' ? 'intel' : `M_chip`;
-                const newAppPath = path.join(outDir, `Airdrop Navigator-${namePostfix}.app`);
-                fs.renameSync(appPath, newAppPath);
-                console.log(`Renamed .app file to ${newAppPath}`);
-                await notarize({
-                    appBundleId: process.env.APPLE_BUNDLE_ID,
-                    appPath: newAppPath,
-                    appleId: process.env.APPLE_ID,
-                    appleIdPassword: process.env.APPLE_ID_PASSWORD,
-                    teamId: process.env.TEAM_ID
-                });
-            } else {
-                console.error(`Cannot find .app file in ${outDir}`);
-                throw new Error(`Cannot find .app file in ${outDir}`);
             }
+
+            const appPath = path.join(outDir, `Airdrop Navigator-${arch}.app`);
+
+            return notarize({
+                appBundleId: process.env.APPLE_BUNDLE_ID,
+                appPath: appPath,
+                appleId: process.env.APPLE_ID,
+                appleIdPassword: process.env.APPLE_ID_PASSWORD,
+                teamId: process.env.TEAM_ID
+            });
         }
     },
     publishers: [
