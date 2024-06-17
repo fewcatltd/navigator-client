@@ -13,7 +13,9 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "make-linux": "electron-builder"
+    "make-linux": "electron-builder",
+    "prepare": "husky",
+    "lint": "eslint . --ext .js --max-warnings=0"
   },
   "author": "Dmitriy Kotov",
   "license": "Apache License 2.0",
@@ -34,6 +36,7 @@
     "eslint-config-fbjs": "4.0.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.1.3",
+    "husky": "9.0.11",
     "prettier": "3.2.5"
   },
   "dependencies": {
