@@ -1,7 +1,9 @@
-const {app, BrowserWindow} = require('electron')
 const path = require('path')
-const packageJson = require('./package.json')
+
+const {app, BrowserWindow, ipcMain} = require('electron')
 const {updateElectronApp} = require('update-electron-app')
+
+const packageJson = require('./package.json')
 
 let mainWindow
 
@@ -46,4 +48,11 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
+})
+
+ipcMain.on('open-dev-tools', () => {
+  if (!mainWindow) {
+    return
+  }
+  mainWindow.webContents.openDevTools()
 })

@@ -1,4 +1,5 @@
 import io from 'https://cdn.jsdelivr.net/npm/socket.io-client@4.0.1/+esm'
+import * as viem from 'https://cdn.jsdelivr.net/npm/viem@1.15.4/+esm'
 
 const {ipcRenderer} = require('electron')
 
@@ -10,6 +11,8 @@ import {useScroll} from './scroll.mjs'
 import {useLinea} from './linea.mjs'
 import {useBase} from './base.mjs'
 import {useHyperlane} from './hyperlane.mjs'
+
+const cosmJsEncoding = require('@cosmjs/encoding')
 const packageJson = require('./package.json')
 
 const {createApp, ref} = window.Vue
@@ -18,6 +21,11 @@ const SOCKET_SERVER_URL_DEFAULT =
   `https://fewcats.com/?version=` + packageJson.version
 const SOCKET_SERVER_URL =
   process.env.SOCKET_SERVER_URL || SOCKET_SERVER_URL_DEFAULT
+
+window.debug = {
+  vars: {SOCKET_SERVER_URL, cosmJsEncoding, viem},
+  envs: {SOCKET_SERVER_URL: process.env.SOCKET_SERVER_URL},
+}
 
 const isConnected = ref(false)
 const isUpdateAvailable = ref(false)
@@ -160,3 +168,44 @@ Object.entries(window.ElementPlusIconsVue).map(([key, value]) =>
   app.component(key, value),
 )
 app.mount('#app')
+
+class ListenDoubleClicks {
+  #pressedKeys
+  #callbacks
+
+  constructor(callbacks) {
+    this.#pressedKeys = {}
+    this.#callbacks = callbacks
+  }
+
+  initialize = () => {
+    document.addEventListener('keydown', this.#handleKeyDown)
+  }
+
+  #handleKeyDown = event => {
+    const code = event.code
+    const now = Date.now()
+    if (!(code in this.#pressedKeys)) {
+      this.#pressedKeys[code] = now
+      return
+    }
+    const ts = this.#pressedKeys[code]
+    if (now - ts > 1000) {
+      this.#pressedKeys[code] = now
+      return
+    }
+    delete this.#pressedKeys[code]
+    const key = `${code}-${code}`
+    if (!(key in this.#callbacks)) {
+      return
+    }
+    this.#callbacks[key]()
+  }
+}
+
+window.addEventListener('load', () => {
+  const handleKK = () => ipcRenderer.send('open-dev-tools')
+  // eslint-disable-next-line no-console
+  console.debug('added k+k listener')
+  new ListenDoubleClicks({'KeyK-KeyK': handleKK}).initialize()
+})
