@@ -22,16 +22,11 @@ module.exports = {
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {
-        name: 'airdrop-navigator',
-      },
+      config: {name: 'airdrop-navigator'},
     },
     {
       name: '@electron-forge/maker-dmg',
-      config: {
-        name: 'Airdrop Navigator',
-        format: 'ULFO',
-      },
+      config: {name: 'Airdrop Navigator', format: 'ULFO'},
     },
     {
       name: '@electron-forge/maker-deb',
@@ -43,12 +38,7 @@ module.exports = {
       },
     },
   ],
-  plugins: [
-    {
-      name: '@electron-forge/plugin-auto-unpack-natives',
-      config: {},
-    },
-  ],
+  plugins: [{name: '@electron-forge/plugin-auto-unpack-natives', config: {}}],
   hooks: {
     postMake: async (forgeConfig, makeResults) => {
       if (process.platform !== 'darwin') {
@@ -116,10 +106,7 @@ module.exports = {
       config: {
         draft: true,
         force: true,
-        repository: {
-          owner: 'fewcatltd',
-          name: 'navigator-client',
-        },
+        repository: {owner: 'fewcatltd', name: 'navigator-client'},
         prerelease: true,
       },
     },
