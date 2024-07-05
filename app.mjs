@@ -10,6 +10,7 @@ import {useZkSync} from './zksync.mjs'
 import {useScroll} from './scroll.mjs'
 import {useLinea} from './linea.mjs'
 import {useBase} from './base.mjs'
+import {useShared1} from './shared-1.mjs'
 import {useHyperlane} from './hyperlane.mjs'
 
 const cosmJsEncoding = require('@cosmjs/encoding')
@@ -71,6 +72,7 @@ const WorkspaceUI = {
     const scroll = await useScroll(socket)
     const linea = await useLinea(socket)
     const base = await useBase(socket)
+    const shared1 = await useShared1(socket)
     const hyperlane = await useHyperlane(socket)
     workspaceInstance = {
       ZoraUI: zora.UI,
@@ -78,6 +80,7 @@ const WorkspaceUI = {
       ScrollUI: scroll.UI,
       LineaUI: linea.UI,
       BaseUI: base.UI,
+      Shared1UI: shared1.UI,
       HyperlaneUI: hyperlane.UI,
       activeBlockchainTab,
     }
@@ -104,7 +107,10 @@ const WorkspaceUI = {
           <component :is="BaseUI"/>
         </el-tab-pane>
         <el-tab-pane label="Hyperlane" name="Hyperlane">
-          <component :is="HyperlaneUI"/>
+        <component :is="HyperlaneUI"/>
+        </el-tab-pane>
+        <el-tab-pane label="Scroll-Zora" name="Shared1UI">
+          <component :is="Shared1UI"/>
         </el-tab-pane>
       </el-tabs>
     </div>
